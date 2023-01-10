@@ -15,7 +15,7 @@ using namespace std;
  * @param height height of image
  * @param width width of image
  */
-void horizontalSobel(Mat image, int height, int width) {
+void horizontalSobel(Mat image, const int height, const int width) {
 	int xDerivates[3][3] = {
 		{1, 0, -1},
 		{2, 0, -2},
