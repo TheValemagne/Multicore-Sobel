@@ -9,8 +9,8 @@ using namespace cv;
 using namespace std;
 
 /**
- * @brief Horizontal Sobel as naive implementation
- * 
+ * @brief Horizontal Sobel as naive parrallel implementation
+ *
  * @param image black-white image
  * @param height height of image
  * @param width width of image
@@ -22,6 +22,7 @@ void horizontalSobel(Mat image, const int height, const int width) {
 		{1, 0, -1}
 	};
 
+	#pragma omp parallel for
 	for (int row = 0; row < height - 2; row++) {
 		for (int col = 0; col < width - 2; col++) {
 			int xDerivate = 0;
@@ -31,6 +32,26 @@ void horizontalSobel(Mat image, const int height, const int width) {
 					xDerivate += xDerivates[i][j] * (int)image.at<uchar>(row + i, col + j);
 				}
 			}
+
+			image.at<uchar>(row, col) = (uchar)xDerivate;
+		}
+	}
+}
+
+/**
+ * @brief Horizontal Sobel as parrallel implementation. Version 2
+ *
+ * @param image black-white image
+ * @param height height of image
+ * @param width width of image
+ */
+void horizontalSobel2(Mat image, const int height, const int width) {
+	#pragma omp parallel for
+	for (int row = 0; row < height - 2; row++) {
+		for (int col = 0; col < width - 2; col++) {
+			int xDerivate = 1 * (int)image.at<uchar>(row, col) - 1 * (int)image.at<uchar>(row, col + 2)
+				+ 2 * (int)image.at<uchar>(row + 1, col) - 2 * (int)image.at<uchar>(row + 1, col + 2)
+				+ 1 * (int)image.at<uchar>(row + 2, col) - 1 * (int)image.at<uchar>(row + 2, col + 2);
 
 			image.at<uchar>(row, col) = (uchar)xDerivate;
 		}
@@ -50,7 +71,7 @@ int main(int argc, char** argv)
 	}
 
 	auto begin = std::chrono::high_resolution_clock::now();
-	horizontalSobel(image, image.rows, image.cols);
+	horizontalSobel2(image, image.rows, image.cols);
 	auto end = std::chrono::high_resolution_clock::now();
 	auto execTime = std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin);
 
