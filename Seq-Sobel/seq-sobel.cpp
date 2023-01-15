@@ -4,6 +4,7 @@
 #include <iostream>
 #define NANO_TO_MILLI 1e-6
 #define IMAGE_PATH "../images/"
+#define IMAGE_DIMENSION "1920"
 
 using namespace cv;
 using namespace std;
@@ -40,7 +41,8 @@ void horizontalSobel(Mat image, const int height, const int width) {
 int main(int argc, char** argv)
 {
 	// Read the image file
-	Mat image = imread(IMAGE_PATH"horses_1920.jpg", IMREAD_GRAYSCALE);
+	string imageName = std::format("{}horses_{}.jpg", IMAGE_PATH, IMAGE_DIMENSION);
+	Mat image = imread(imageName, IMREAD_GRAYSCALE);
 
 	// Check for failure
 	if (image.empty()) {
@@ -56,7 +58,8 @@ int main(int argc, char** argv)
 
 	// Wait for any keystroke in the window
 	waitKey(0);
-	imwrite(IMAGE_PATH"horses_1920_sobel.jpg", image);
+	string imageResultName = std::format("{}horses_{}_sobel.jpg", IMAGE_PATH, IMAGE_DIMENSION);
+	imwrite(imageResultName, image);
 
 	double execTimeSobel = ((double)execTime.count() * NANO_TO_MILLI);
 	printf("\n\nExect time: %f ms\n", execTimeSobel);
