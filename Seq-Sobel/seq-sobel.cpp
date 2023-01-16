@@ -4,7 +4,7 @@
 #include <iostream>
 #define NANO_TO_MILLI 1e-6
 #define IMAGE_PATH "../images/"
-#define IMAGE_DIMENSION "1920"
+#define IMAGE_DIMENSION "4500"
 
 using namespace cv;
 using namespace std;
