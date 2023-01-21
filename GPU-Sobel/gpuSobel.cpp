@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "omp.h"
+#include <omp.h>
 #include <opencv2/opencv.hpp>
 #include <iostream>
 #define NANO_TO_MILLI 1e-6
@@ -12,6 +12,7 @@ using namespace std;
  * @brief Horizontal Sobel as parrallel implementation. Version 3 with OpenMP-teams.
  *
  * @param image black-white image
+ * @param result result image after horizental filtering
  * @param height height of image
  * @param width width of image
  */
@@ -29,6 +30,14 @@ void horizontalSobel(const uchar *image, uchar *result, const int height, const 
 	}
 }
 
+/**
+ * @brief Convert OpenCV matrix to uchar array.
+ *
+ * @param matrix data of image
+ * @param array result images pixels in an array
+ * @param rows height of image
+ * @param cols width of image
+ */
 void matrixToArray(const Mat matrix, uchar *array, const int rows, const int cols){
     for (int row = 0; row < rows; row++) {
         for (int col = 0; col < cols; col++) {
@@ -37,6 +46,14 @@ void matrixToArray(const Mat matrix, uchar *array, const int rows, const int col
     }
 }
 
+/**
+ * @brief Update OpenCV matrix with data of uchar array.
+ *
+ * @param array images pixels in an array
+ * @param matrix data of image to update
+ * @param rows height of image
+ * @param cols width of image
+ */
 void arrayToMatrix(const uchar *array, Mat matrix, const int rows, const int cols){
     for (auto row = 0; row < rows; row++) {
         for (auto col = 0; col < cols; col++) {
@@ -78,7 +95,6 @@ int main(int argc, char** argv)
 			printf("Running on device\n");
 		}
 	}
-
 
 	auto begin = std::chrono::high_resolution_clock::now();
 	horizontalSobel(imageArray, imageResultArray, image.rows, image.cols);

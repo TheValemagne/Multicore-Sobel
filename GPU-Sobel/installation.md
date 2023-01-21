@@ -1,5 +1,9 @@
+Sources ofr needed packages before: https://pyimagesearch.com/2018/08/15/how-to-install-opencv-4-on-ubuntu/
+
 Install Opencv on wsl: 
 - sudo apt update && sudo apt install -y cmake g++ wget unzip
+- sudo apt-get install libgtk-3-dev
+
 - wget -O opencv.zip https://github.com/opencv/opencv/archive/4.7.0.zip
 - unzip opencv.zip
 - mv opencv-4.7.0 opencv
@@ -30,6 +34,16 @@ Solve error ``error while loading shared libraries: libopencv_highgui.so.4.4: ca
 - sudo touch /etc/ld.so.conf.d/opencv.conf
 - sudo nano /etc/ld.so.conf.d/opencv.conf   --> open an IDE and add this content: /usr/local/lib --> ctr + o to save, ctr + x to leave
 - sudo ldconfig -v
+
+Solve errors ``
+ptxas ..., line {n}; error   : Illegal operand type to instruction 'ld'
+...
+ptxas ..., line {m}; error   : Unknown symbol '__stack_chk_guard'
+...
+ptxas fatal   : Ptx assembly aborted due to errors
+nvptx-as: ptxas returned 255 exit status
+``
+- add compiler option: -fno-stack-protector
 
 Check that you have following folder:
 - usr/local/include/opencv4/ with opencv2 als folder inside
