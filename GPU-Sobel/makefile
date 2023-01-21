@@ -4,4 +4,4 @@ LIBS = -lopencv_objdetect -lopencv_features2d -lopencv_imgproc -lopencv_highgui 
 OPENMP = -fopenmp -foffload=nvptx-none -fcf-protection=none
 
 % : %.cpp
-	${CC} -std=c++11 -o $@ $< $(opencv) $(LIBS) $(OPENMP) -fno-stack-protector -no-pie
+	${CC} -std=c++11 -o $@ $< $(OPENCV) $(LIBS) $(OPENMP) -fno-stack-protector -no-pie
