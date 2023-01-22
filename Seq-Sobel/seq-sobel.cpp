@@ -25,15 +25,15 @@ void horizontalSobel(Mat image, const int height, const int width) {
 
 	for (int row = 0; row < height - 2; row++) {
 		for (int col = 0; col < width - 2; col++) {
-			int xDerivate = 0;
+			uchar xDerivate = 0;
 
 			for (int i = 0; i < 3; i++) {
 				for (int j = 0; j < 3; j++) {
-					xDerivate += xDerivates[i][j] * (int)image.at<uchar>(row + i, col + j);
+					xDerivate += xDerivates[i][j] * image.at<uchar>(row + i, col + j);
 				}
 			}
 
-			image.at<uchar>(row, col) = (uchar)xDerivate;
+			image.at<uchar>(row, col) = xDerivate;
 		}
 	}
 }
@@ -60,11 +60,10 @@ int main(int argc, char** argv)
 	waitKey(0);
 	string imageResultName = std::format("{}horses_{}_sobel.jpg", IMAGE_PATH, IMAGE_DIMENSION);
 	imwrite(imageResultName, image);
+	image.release();
 
 	double execTimeSobel = ((double)execTime.count() * NANO_TO_MILLI);
 	printf("\n\nExect time: %f ms\n", execTimeSobel);
-
-	image.release();
 
 	return 0;
 }

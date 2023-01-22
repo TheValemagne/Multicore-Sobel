@@ -11,7 +11,7 @@ using namespace cv;
 using namespace std;
 
 /**
- * @brief Horizontal Sobel as naive parrallel implementation
+ * @brief Horizontal Sobel as naive parallel implementation on CPU.
  *
  * @param image black-white image
  * @param height height of image
@@ -27,21 +27,21 @@ void horizontalSobel(Mat image, const int height, const int width) {
 	#pragma omp parallel for
 	for (int row = 0; row < height - 2; row++) {
 		for (int col = 0; col < width - 2; col++) {
-			int xDerivate = 0;
+			uchar xDerivate = 0;
 
 			for (int i = 0; i < 3; i++) {
 				for (int j = 0; j < 3; j++) {
-					xDerivate += xDerivates[i][j] * (int)image.at<uchar>(row + i, col + j);
+					xDerivate += xDerivates[i][j] * image.at<uchar>(row + i, col + j);
 				}
 			}
 
-			image.at<uchar>(row, col) = (uchar)xDerivate;
+			image.at<uchar>(row, col) = xDerivate;
 		}
 	}
 }
 
 /**
- * @brief Horizontal Sobel as parrallel implementation. Version 2 with OpenMP-parallel for
+ * @brief Horizontal Sobel as parallel implementation on CPU. Version 2 with OpenMP-parallel for.
  *
  * @param image black-white image
  * @param height height of image
@@ -51,17 +51,17 @@ void horizontalSobel2(Mat image, const int height, const int width) {
 	#pragma omp parallel for schedule(static)
 	for (int row = 0; row < height - 2; row++) {
 		for (int col = 0; col < width - 2; col++) {
-			int xDerivate = (int)image.at<uchar>(row, col) - (int)image.at<uchar>(row, col + 2)
-				+ 2 * (int)image.at<uchar>(row + 1, col) - 2 * (int)image.at<uchar>(row + 1, col + 2)
-				+ (int)image.at<uchar>(row + 2, col) - (int)image.at<uchar>(row + 2, col + 2);
+			uchar xDerivate = image.at<uchar>(row, col) - image.at<uchar>(row, col + 2)
+				+ 2 * image.at<uchar>(row + 1, col) - 2 * image.at<uchar>(row + 1, col + 2)
+				+ image.at<uchar>(row + 2, col) - image.at<uchar>(row + 2, col + 2);
 
-			image.at<uchar>(row, col) = (uchar)xDerivate;
+			image.at<uchar>(row, col) = xDerivate;
 		}
 	}
 }
 
 /**
- * @brief Horizontal Sobel as parrallel implementation. Version 3 with OpenMP-teams.
+ * @brief Horizontal Sobel as parallel implementation on CPU. Version 3 with OpenMP-teams.
  *
  * @param image black-white image
  * @param height height of image
@@ -71,17 +71,17 @@ void horizontalSobel3(Mat image, const int height, const int width) {
 	#pragma omp teams loop num_teams(3) thread_limit(4)
 	for (int row = 0; row < height - 2; row++) {
 		for (int col = 0; col < width - 2; col++) {
-			int xDerivate = (int)image.at<uchar>(row, col) - (int)image.at<uchar>(row, col + 2)
-				+ 2 * (int)image.at<uchar>(row + 1, col) - 2 * (int)image.at<uchar>(row + 1, col + 2)
-				+ (int)image.at<uchar>(row + 2, col) - (int)image.at<uchar>(row + 2, col + 2);
+			uchar xDerivate = image.at<uchar>(row, col) - image.at<uchar>(row, col + 2)
+				+ 2 * image.at<uchar>(row + 1, col) - 2 * image.at<uchar>(row + 1, col + 2)
+				+ image.at<uchar>(row + 2, col) - image.at<uchar>(row + 2, col + 2);
 
-			image.at<uchar>(row, col) = (uchar)xDerivate;
+			image.at<uchar>(row, col) = xDerivate;
 		}
 	}
 }
 
 /**
- * @brief Horizontal Sobel as parrallel implementation. Version 4 with OpenMP-teams and parralel region.
+ * @brief Horizontal Sobel as parallel implementation on CPU. Version 4 with OpenMP-teams and parralel region.
  *
  * @param image black-white image
  * @param height height of image
@@ -92,11 +92,11 @@ void horizontalSobel4(Mat image, const int height, const int width) {
 	for (int row = 0; row < height - 2; row++) {
 		#pragma omp parallel for
 		for (int col = 0; col < width - 2; col++) {
-			int xDerivate = (int)image.at<uchar>(row, col) - (int)image.at<uchar>(row, col + 2)
-				+ 2 * (int)image.at<uchar>(row + 1, col) - 2 * (int)image.at<uchar>(row + 1, col + 2)
-				+ (int)image.at<uchar>(row + 2, col) - (int)image.at<uchar>(row + 2, col + 2);
+			uchar xDerivate = image.at<uchar>(row, col) - image.at<uchar>(row, col + 2)
+				+ 2 * image.at<uchar>(row + 1, col) - 2 * image.at<uchar>(row + 1, col + 2)
+				+ image.at<uchar>(row + 2, col) - image.at<uchar>(row + 2, col + 2);
 
-			image.at<uchar>(row, col) = (uchar)xDerivate;
+			image.at<uchar>(row, col) = xDerivate;
 		}
 	}
 }
@@ -123,11 +123,10 @@ int main(int argc, char** argv)
 	waitKey(0);
 	string imageResultName = std::format("{}horses_{}_sobel.jpg", IMAGE_PATH, IMAGE_DIMENSION);
 	imwrite(imageResultName, image);
+	image.release();
 
 	double execTimeSobel = ((double)execTime.count() * NANO_TO_MILLI);
 	printf("\n\nExect time: %f ms\n", execTimeSobel);
-
-	image.release();
 
 	return 0;
 }
