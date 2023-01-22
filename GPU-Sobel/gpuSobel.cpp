@@ -9,7 +9,7 @@ using namespace cv;
 using namespace std;
 
 /**
- * @brief Horizontal Sobel as parrallel implementation. Version 3 with OpenMP-teams.
+ * @brief Horizontal Sobel as parallel implementation on GPU. Version 1 with OpenMP-teams.
  *
  * @param image black-white image
  * @param result result image after horizental filtering
@@ -17,15 +17,36 @@ using namespace std;
  * @param width width of image
  */
 void horizontalSobel(const uchar *image, uchar *result, const int height, const int width) {
-	#pragma omp target
-	#pragma omp teams loop shared(image)
+	#pragma omp target teams loop shared(image)
 	for (int row = 0; row < height - 2; row++) {
 		for (int col = 0; col < width - 2; col++) {
-			int xDerivate = (int)image[row * width + col] - (int)image[row * width + col + 2]
-				+ 2 * (int)image[(row + 1) * width + col] - 2 * (int)image[(row + 1) * width + col + 2]
-				+ (int)image[(row + 2) * width + col] - (int)image[(row + 2) * width + col + 2];
+			uchar xDerivate = image[row * width + col] - image[row * width + col + 2]
+				+ 2 * image[(row + 1) * width + col] - 2 * image[(row + 1) * width + col + 2]
+				+ image[(row + 2) * width + col] - image[(row + 2) * width + col + 2];
 
-			result[row * width + col] = (uchar)xDerivate;
+			result[row * width + col] = xDerivate;
+		}
+	}
+}
+
+/**
+ * @brief Horizontal Sobel as parallel implementation on GPU. Version 1 with OpenMP-teams and parallel regions.
+ * 
+ * @param image black-white image
+ * @param result result image after horizental filtering
+ * @param height height of image
+ * @param width width of image
+ */
+void horizontalSobel2(const uchar *image, uchar *result, const int height, const int width) {
+	#pragma omp target teams loop shared(image)
+	for (int row = 0; row < height - 2; row++) {
+		#pragma omp parallel for
+		for (int col = 0; col < width - 2; col++) {
+			uchar xDerivate = image[row * width + col] - image[row * width + col + 2]
+				+ 2 * image[(row + 1) * width + col] - 2 * image[(row + 1) * width + col + 2]
+				+ image[(row + 2) * width + col] - image[(row + 2) * width + col + 2];
+
+			result[row * width + col] = xDerivate;
 		}
 	}
 }
@@ -78,14 +99,15 @@ int main(int argc, char** argv)
 		return -1;
 	}
 
-	const int imageSize = image.rows * image.cols * sizeof(char);
-	const int pixels = image.rows * image.cols;
-	auto imageArray = (uchar *)malloc(imageSize);
-	auto imageResultArray = (uchar *)malloc(imageSize);
+	const int PIXELS = image.rows * image.cols;
+	const int IMAGE_SIZE = PIXELS * sizeof(char);
+
+	auto *imageArray = (uchar *)malloc(IMAGE_SIZE);
+	auto *imageResultArray = (uchar *)malloc(IMAGE_SIZE);
 	matrixToArray(image, imageArray, image.rows, image.cols);
 
-	// cpu to gpu
-	#pragma omp target enter data map(to: imageArray[0:pixels], imageResultArray[0:pixels])
+	// transfer data from cpu to gpu, only need to alloc space for imageResultArray
+	#pragma omp target enter data map(to: imageArray[0:PIXELS]) map(alloc: imageResultArray[0:PIXELS])
 
 	#pragma omp target
 	{
@@ -101,17 +123,18 @@ int main(int argc, char** argv)
 	auto end = std::chrono::high_resolution_clock::now();
 	auto execTime = std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin);
 
-	// gpu to cpu
-	#pragma omp target exit data map(from: imageResultArray[0:pixels])
-	arrayToMatrix(imageResultArray, image, image.rows, image.cols);
+	// tranfert result from gpu to cpu
+	#pragma omp target exit data map(from: imageResultArray[0:PIXELS])
+	// relase allocated data on GPU
+	#pragma omp target exit data map(release: imageArray[0:PIXELS], imageResultArray[0:PIXELS])
 
+	arrayToMatrix(imageResultArray, image, image.rows, image.cols);
 	string imageResultName = IMAGE_PATH + "horses_" + IMAGE_DIMENSION + "_sobel.jpg";
 	imwrite(imageResultName, image);
+	image.release();
 
 	double execTimeSobel = ((double)execTime.count() * NANO_TO_MILLI);
-	printf("\n\nExect time: %f ms\n", execTimeSobel);
-
-	image.release();
+	printf("\nExect time: %f ms\n", execTimeSobel);
 
 	return 0;
 }
