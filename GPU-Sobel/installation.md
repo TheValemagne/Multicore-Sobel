@@ -1,4 +1,4 @@
-Sources ofr needed packages before: https://pyimagesearch.com/2018/08/15/how-to-install-opencv-4-on-ubuntu/
+Sources for needed packages before: https://pyimagesearch.com/2018/08/15/how-to-install-opencv-4-on-ubuntu/
 
 Install Opencv on wsl: 
 - sudo apt update && sudo apt install -y cmake g++ wget unzip
@@ -29,6 +29,8 @@ Now back on build:
 ```
 cmake -D CMAKE_BUILD_TYPE=RELEASE        -D CMAKE_INSTALL_PREFIX=/usr/local      -D INSTALL_PYTHON_EXAMPLES=ON       -D INSTALL_C_EXAMPLES=OFF       -D OPENCV_ENABLE_NONFREE=ON     -D PYTHON_EXECUTABLE=~/.virtualenvs/cv/bin/python   -D BUILD_EXAMPLES=ON ..
 ```
+
+When building opencv filed, you need to download  VTK and opencv_contib. VTK muss be builded and opencv_contrig be unzipped.
 
 Solve error ``error while loading shared libraries: libopencv_highgui.so.4.4: cannot open shared object file: No such file or directory``:
 - sudo touch /etc/ld.so.conf.d/opencv.conf
