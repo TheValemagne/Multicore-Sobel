@@ -99,6 +99,7 @@ int main(int argc, char** argv)
 		return -1;
 	}
 
+	// Prepare and convete images data
 	const int PIXELS = image.rows * image.cols;
 	const int IMAGE_SIZE = PIXELS * sizeof(char);
 
@@ -106,7 +107,7 @@ int main(int argc, char** argv)
 	auto *imageResultArray = (uchar *)malloc(IMAGE_SIZE);
 	matrixToArray(image, imageArray, image.rows, image.cols);
 
-	// transfer data from cpu to gpu, only need to alloc space for imageResultArray
+	// Transfer data from cpu to gpu, only need to alloc space for imageResultArray
 	#pragma omp target enter data map(to: imageArray[0:PIXELS]) map(alloc: imageResultArray[0:PIXELS])
 
 	#pragma omp target
@@ -123,12 +124,16 @@ int main(int argc, char** argv)
 	auto end = std::chrono::high_resolution_clock::now();
 	auto execTime = std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin);
 
-	// tranfert result from gpu to cpu
+	// Tranfert result from gpu to cpu
 	#pragma omp target exit data map(from: imageResultArray[0:PIXELS])
-	// relase allocated data on GPU
+	// Relase allocated data on GPU
 	#pragma omp target exit data map(release: imageArray[0:PIXELS], imageResultArray[0:PIXELS])
 
+	// Convert data to Matrix and free no needed data
 	arrayToMatrix(imageResultArray, image, image.rows, image.cols);
+	free(imageArray);
+	free(imageResultArray);
+	
 	string imageResultName = IMAGE_PATH + "horses_" + IMAGE_DIMENSION + "_sobel.jpg";
 	imwrite(imageResultName, image);
 	image.release();
