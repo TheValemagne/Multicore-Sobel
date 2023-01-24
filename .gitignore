@@ -4,3 +4,6 @@
 /CPU-Sobel/x64/
 /CPU-Sobel/.vs/
 /GPU-Sobel/gpuSobel
+/Cuda-Sobel/*.exe
+/Cuda-Sobel/*.exp
+/Cuda-Sobel/*.lib
