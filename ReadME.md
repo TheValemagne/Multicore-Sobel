@@ -33,4 +33,4 @@ Important:
     - Compile code with g++ -o sobel sobel.cpp -fopenmp -foffload=nvptx-none -fcf-protection=none
 
 - For running CUDA version of sobel:
-    - please read instalation.md in Cuda-Sobel folder
+    - please read installation.md in Cuda-Sobel folder
