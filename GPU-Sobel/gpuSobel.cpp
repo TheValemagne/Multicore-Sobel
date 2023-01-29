@@ -52,6 +52,48 @@ void horizontalSobel2(const uchar *image, uchar *result, const int height, const
 }
 
 /**
+ * @brief Horizontal Sobel as parallel implementation on GPU. Version 3 with OpenMP-teams and collapse.
+ *
+ * @param image black-white image
+ * @param result result image after horizental filtering
+ * @param height height of image
+ * @param width width of image
+ */
+void horizontalSobel3(const uchar *image, uchar *result, const int height, const int width) {
+	#pragma omp target teams loop shared(image) collapse(2)
+	for (int row = 0; row < height - 2; row++) {
+		for (int col = 0; col < width - 2; col++) {
+			uchar xDerivate = image[row * width + col] - image[row * width + col + 2]
+				+ 2 * image[(row + 1) * width + col] - 2 * image[(row + 1) * width + col + 2]
+				+ image[(row + 2) * width + col] - image[(row + 2) * width + col + 2];
+
+			result[row * width + col] = xDerivate;
+		}
+	}
+}
+
+/**
+ * @brief Horizontal Sobel as parallel implementation on GPU. Version 4 with OpenMP-teams and for of 2 levels.
+ *
+ * @param image black-white image
+ * @param result result image after horizental filtering
+ * @param height height of image
+ * @param width width of image
+ */
+void horizontalSobel4(const uchar *image, uchar *result, const int height, const int width) {
+	#pragma omp target teams distribute parallel for
+	for (int row = 0; row < height - 2; row++) {
+		for (int col = 0; col < width - 2; col++) {
+			uchar xDerivate = image[row * width + col] - image[row * width + col + 2]
+				+ 2 * image[(row + 1) * width + col] - 2 * image[(row + 1) * width + col + 2]
+				+ image[(row + 2) * width + col] - image[(row + 2) * width + col + 2];
+
+			result[row * width + col] = xDerivate;
+		}
+	}
+}
+
+/**
  * @brief Convert OpenCV matrix to uchar array.
  *
  * @param matrix data of image
@@ -87,7 +129,7 @@ int main(int argc, char** argv)
 {
 	// Read the image file
     const string IMAGE_PATH = "../images/";
-    const string IMAGE_DIMENSION = "4500";
+    const string IMAGE_DIMENSION = "640";
 
 	string imageName = IMAGE_PATH + "horses_" + IMAGE_DIMENSION + ".jpg";
 	Mat image = imread(imageName, IMREAD_GRAYSCALE);
@@ -120,14 +162,14 @@ int main(int argc, char** argv)
 	}
 
 	auto begin = std::chrono::high_resolution_clock::now();
-	horizontalSobel(imageArray, imageResultArray, image.rows, image.cols);
+	horizontalSobel3(imageArray, imageResultArray, image.rows, image.cols);
 	auto end = std::chrono::high_resolution_clock::now();
 	auto execTime = std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin);
 
 	// Tranfert result from gpu to cpu
-	#pragma omp target exit data map(from: imageResultArray[0:PIXELS])
-	// Relase allocated data on GPU
-	#pragma omp target exit data map(release: imageArray[0:PIXELS], imageResultArray[0:PIXELS])
+	#pragma omp target update from(imageResultArray[0:PIXELS])
+	// delete/release data on GPU
+	#pragma omp target exit data map(delete: imageArray[0:PIXELS], imageResultArray[0:PIXELS])
 
 	// Convert data to Matrix and free no needed data
 	arrayToMatrix(imageResultArray, image, image.rows, image.cols);

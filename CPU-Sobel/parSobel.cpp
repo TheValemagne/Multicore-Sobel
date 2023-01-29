@@ -68,7 +68,7 @@ void horizontalSobel2(Mat image, const int height, const int width) {
  * @param width width of image
  */
 void horizontalSobel3(Mat image, const int height, const int width) {
-	#pragma omp teams loop num_teams(3) thread_limit(4)
+	#pragma omp teams loop
 	for (int row = 0; row < height - 2; row++) {
 		for (int col = 0; col < width - 2; col++) {
 			uchar xDerivate = image.at<uchar>(row, col) - image.at<uchar>(row, col + 2)

@@ -88,7 +88,7 @@ int main(void) {
 
     // Cuda stuff
     dim3 threads(THREAD_DIM, THREAD_DIM, 1);
-    dim3 blocks(ceil(image.rows/(double)THREAD_DIM), ceil(image.cols/(double)THREAD_DIM), 1);
+    dim3 blocks(ceil((image.rows - 2)/(double)THREAD_DIM), ceil((image.cols - 2)/(double)THREAD_DIM), 1);
     printf("Blocks: %d, threads per block: %d", blocks.x * blocks.y, threads.x * threads.y);
 
     uchar *devImageArray;
