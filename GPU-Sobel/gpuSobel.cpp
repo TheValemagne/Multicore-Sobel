@@ -81,7 +81,7 @@ void horizontalSobel3(const uchar *image, uchar *result, const int height, const
  * @param width width of image
  */
 void horizontalSobel4(const uchar *image, uchar *result, const int height, const int width) {
-	#pragma omp target teams distribute parallel for
+	#pragma omp target teams distribute parallel for collapse(2)
 	for (int row = 0; row < height - 2; row++) {
 		for (int col = 0; col < width - 2; col++) {
 			uchar xDerivate = image[row * width + col] - image[row * width + col + 2]
@@ -129,7 +129,7 @@ int main(int argc, char** argv)
 {
 	// Read the image file
     const string IMAGE_PATH = "../images/";
-    const string IMAGE_DIMENSION = "640";
+    const string IMAGE_DIMENSION = "4500";
 
 	string imageName = IMAGE_PATH + "horses_" + IMAGE_DIMENSION + ".jpg";
 	Mat image = imread(imageName, IMREAD_GRAYSCALE);

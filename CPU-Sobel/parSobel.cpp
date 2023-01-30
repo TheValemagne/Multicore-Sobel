@@ -88,7 +88,7 @@ void horizontalSobel3(Mat image, const int height, const int width) {
  * @param width width of image
  */
 void horizontalSobel4(Mat image, const int height, const int width) {
-	#pragma omp teams loop num_teams(2) thread_limit(4)
+	#pragma omp teams loop
 	for (int row = 0; row < height - 2; row++) {
 		#pragma omp parallel for
 		for (int col = 0; col < width - 2; col++) {
@@ -115,7 +115,7 @@ int main(int argc, char** argv)
 	}
 
 	auto begin = std::chrono::high_resolution_clock::now();
-	horizontalSobel2(image, image.rows, image.cols);
+	horizontalSobel4(image, image.rows, image.cols);
 	auto end = std::chrono::high_resolution_clock::now();
 	auto execTime = std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin);
 
