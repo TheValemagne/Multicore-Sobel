@@ -166,10 +166,8 @@ int main(int argc, char** argv)
 	auto end = std::chrono::high_resolution_clock::now();
 	auto execTime = std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin);
 
-	// Tranfert result from gpu to cpu
-	#pragma omp target update from(imageResultArray[0:PIXELS])
-	// delete/release data on GPU
-	#pragma omp target exit data map(delete: imageArray[0:PIXELS], imageResultArray[0:PIXELS])
+	// Tranfert result from gpu to cpu and delete/release data on GPU
+	#pragma omp target exit data map(delete: imageArray[0:PIXELS]) map(from: imageResultArray[0:PIXELS])
 
 	// Convert data to Matrix and free no needed data
 	arrayToMatrix(imageResultArray, image, image.rows, image.cols);

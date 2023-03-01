@@ -59,3 +59,7 @@ or without makefile:
 ```
 g++ -o gpuSobel gpuSobel.cpp -I/usr/local/include/opencv4/ -lopencv_objdetect -lopencv_features2d -lopencv_imgproc -lopencv_highgui -lopencv_core  -lopencv_imgcodecs -fopenmp -foffload=nvptx-none -fcf-protection=none  -fno-stack-protector -no-pie
 ```
+
+Note:
+- flag -foffload=nvptx-none is optional. The code will automatically run on NVdia GPU, whenn target regions are entered.
+- Theses offload options are specific to GNU
