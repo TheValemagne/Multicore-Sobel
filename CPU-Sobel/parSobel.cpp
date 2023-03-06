@@ -11,43 +11,13 @@ using namespace cv;
 using namespace std;
 
 /**
- * @brief Horizontal Sobel as naive parallel implementation on CPU.
+ * @brief Horizontal Sobel as parallel implementation on CPU. Version with OpenMP-parallel for.
  *
  * @param image black-white image
  * @param height height of image
  * @param width width of image
  */
 void horizontalSobel(Mat image, const int height, const int width) {
-	int xDerivates[3][3] = {
-		{1, 0, -1},
-		{2, 0, -2},
-		{1, 0, -1}
-	};
-
-	#pragma omp parallel for
-	for (int row = 0; row < height - 2; row++) {
-		for (int col = 0; col < width - 2; col++) {
-			uchar xDerivate = 0;
-
-			for (int i = 0; i < 3; i++) {
-				for (int j = 0; j < 3; j++) {
-					xDerivate += xDerivates[i][j] * image.at<uchar>(row + i, col + j);
-				}
-			}
-
-			image.at<uchar>(row, col) = xDerivate;
-		}
-	}
-}
-
-/**
- * @brief Horizontal Sobel as parallel implementation on CPU. Version 2 with OpenMP-parallel for.
- *
- * @param image black-white image
- * @param height height of image
- * @param width width of image
- */
-void horizontalSobel2(Mat image, const int height, const int width) {
 	#pragma omp parallel for schedule(static)
 	for (int row = 0; row < height - 2; row++) {
 		for (int col = 0; col < width - 2; col++) {
@@ -61,13 +31,13 @@ void horizontalSobel2(Mat image, const int height, const int width) {
 }
 
 /**
- * @brief Horizontal Sobel as parallel implementation on CPU. Version 3 with OpenMP-teams.
+ * @brief Horizontal Sobel as parallel implementation on CPU. Version with OpenMP-teams.
  *
  * @param image black-white image
  * @param height height of image
  * @param width width of image
  */
-void horizontalSobel3(Mat image, const int height, const int width) {
+void horizontalSobel2(Mat image, const int height, const int width) {
 	#pragma omp teams loop
 	for (int row = 0; row < height - 2; row++) {
 		for (int col = 0; col < width - 2; col++) {
@@ -81,13 +51,13 @@ void horizontalSobel3(Mat image, const int height, const int width) {
 }
 
 /**
- * @brief Horizontal Sobel as parallel implementation on CPU. Version 4 with OpenMP-teams and parralel region.
+ * @brief Horizontal Sobel as parallel implementation on CPU. Version with OpenMP-teams and parralel region.
  *
  * @param image black-white image
  * @param height height of image
  * @param width width of image
  */
-void horizontalSobel4(Mat image, const int height, const int width) {
+void horizontalSobel3(Mat image, const int height, const int width) {
 	#pragma omp teams loop
 	for (int row = 0; row < height - 2; row++) {
 		#pragma omp parallel for
@@ -115,7 +85,7 @@ int main(int argc, char** argv)
 	}
 
 	auto begin = std::chrono::high_resolution_clock::now();
-	horizontalSobel4(image, image.rows, image.cols);
+	horizontalSobel(image, image.rows, image.cols);
 	auto end = std::chrono::high_resolution_clock::now();
 	auto execTime = std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin);
 

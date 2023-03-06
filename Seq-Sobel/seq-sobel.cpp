@@ -17,21 +17,11 @@ using namespace std;
  * @param width width of image
  */
 void horizontalSobel(Mat image, const int height, const int width) {
-	int xDerivates[3][3] = {
-		{1, 0, -1},
-		{2, 0, -2},
-		{1, 0, -1}
-	};
-
 	for (int row = 0; row < height - 2; row++) {
 		for (int col = 0; col < width - 2; col++) {
-			uchar xDerivate = 0;
-
-			for (int i = 0; i < 3; i++) {
-				for (int j = 0; j < 3; j++) {
-					xDerivate += xDerivates[i][j] * image.at<uchar>(row + i, col + j);
-				}
-			}
+			uchar xDerivate = image.at<uchar>(row, col) - image.at<uchar>(row, col + 2)
+				+ 2 * image.at<uchar>(row + 1, col) - 2 * image.at<uchar>(row + 1, col + 2)
+				+ image.at<uchar>(row + 2, col) - image.at<uchar>(row + 2, col + 2);
 
 			image.at<uchar>(row, col) = xDerivate;
 		}
