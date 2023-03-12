@@ -1,3 +1,8 @@
+Setup:
+- Enable [WSL 2](https://learn.microsoft.com/en-gb/windows/wsl/install) on Windows.
+- [Ubuntu 22.04 LTS](https://apps.microsoft.com/store/detail/ubuntu-22042-lts/9PN20MSR04DW)
+- OpenCV 4.7.0
+
 Sources for needed packages before installation: https://pyimagesearch.com/2018/08/15/how-to-install-opencv-4-on-ubuntu/
 
 Install Opencv on wsl: 

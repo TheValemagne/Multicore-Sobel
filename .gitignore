@@ -1,9 +1,16 @@
+# ignore all files without extensions (c-compiled code on WSL)
+*
+!*.*
+!*/
+
+# Visual Studio projects build and folders
+**/x64/
+**/.vs/
+
+# Compiled code: c++ and cuda on Windows
+*.exe
+*.lib
+*.exp
+
+# Generated images with sobel filter
 /images/*_sobel.jpg
-/Seq-Sobel/x64/
-/Seq-Sobel/.vs/
-/CPU-Sobel/x64/
-/CPU-Sobel/.vs/
-/GPU-Sobel/gpuSobel
-/Cuda-Sobel/*.exe
-/Cuda-Sobel/*.exp
-/Cuda-Sobel/*.lib
