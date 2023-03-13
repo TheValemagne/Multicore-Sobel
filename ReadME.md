@@ -13,7 +13,6 @@ Before to compile sobel codes, you need to install some software:
     - Seq-sobel and CPU-Sobel projets were setup with Visual Studio 2022 and [Intel C++ Compiler 2023](https://www.intel.com/content/www/us/en/developer/articles/tool/oneapi-standalone-components.html#dpcpp-cpp) for Teams support. Also support GPU-Offloading for Intel GPUs.
     - GPU-Sobel project run on WSL Ubuntu 22.04 LTS with g++ v11.3.0, use terminal and provided makefile. You need to enable on Windows WSL. Please read [installation.md](GPU-Sobel/installation.md) for more details.
     - Cuda-Sobel project needs [Cuda toolkit 11.8](https://developer.nvidia.com/cuda-11-8-0-download-archive) and Visual Studio Build tools. Please read [installation.md](Cuda-Sobel/installation.md)
-- Projects use ISO C++ 20 Standart, which provide the function std::format in c++ (not supported on GPUs)
 - Images are stored in the ``images`` directory.
 
 ⚠️ Important:
