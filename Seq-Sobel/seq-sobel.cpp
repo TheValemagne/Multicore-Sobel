@@ -20,9 +20,9 @@ using namespace std;
 void horizontalSobel(Mat image, const int height, const int width) {
 	for (int row = 0; row < height - 2; row++) {
 		for (int col = 0; col < width - 2; col++) {
-			uchar xDerivate = image.at<uchar>(row, col) - image.at<uchar>(row, col + 2)
-				+ 2 * image.at<uchar>(row + 1, col) - 2 * image.at<uchar>(row + 1, col + 2)
-				+ image.at<uchar>(row + 2, col) - image.at<uchar>(row + 2, col + 2);
+			uchar xDerivate =   image.at<uchar>(row, col)         - image.at<uchar>(row, col + 2)
+				              + 2 * image.at<uchar>(row + 1, col) - 2 * image.at<uchar>(row + 1, col + 2)
+				              + image.at<uchar>(row + 2, col)     - image.at<uchar>(row + 2, col + 2);
 
 			image.at<uchar>(row, col) = xDerivate;
 		}

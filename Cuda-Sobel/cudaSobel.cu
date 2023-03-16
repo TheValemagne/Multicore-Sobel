@@ -25,9 +25,9 @@ __global__ void horizontalSobel(const uchar *image, uchar *result, const int hei
     const int col = threadIdx.y + blockIdx.y * blockDim.y;
 
     if(row <= height - 2 && col <= width - 2){
-        uchar xDerivate = image[row * width + col] - image[row * width + col + 2]
-	        + 2 * image[(row + 1) * width + col] - 2 * image[(row + 1) * width + col + 2]
-	        + image[(row + 2) * width + col] - image[(row + 2) * width + col + 2];
+        uchar xDerivate =   image[row * width + col]           - image[row * width + col + 2]
+				          + 2 * image[(row + 1) * width + col] - 2 * image[(row + 1) * width + col + 2]
+				          + image[(row + 2) * width + col]     - image[(row + 2) * width + col + 2];
 
         result[row * width + col] = xDerivate;
     }
