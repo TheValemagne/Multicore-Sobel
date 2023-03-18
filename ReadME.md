@@ -1,8 +1,8 @@
 # Multicore- und GPU-Computing: Projekt WS 2022-23
 
-Implementation of horizental [sobel filter](https://en.wikipedia.org/wiki/Sobel_operator) for black and white images with use of GPU and Multicore power. This projet tests the new features of OpenMP 5.0 or higher for a project at the HTW Saar. GPU-Offloading is an experimental festure, currently supported for few c and c++ compilers ([list of OpenMP compilers](https://www.openmp.org/resources/openmp-compilers-tools/)). 
+Implementation of horizental [sobel filter](https://en.wikipedia.org/wiki/Sobel_operator) for black and white images with use of GPU and Multicore power. This projet tests the new features of OpenMP 5.0 or higher for a project at the HTW Saar. GPU-Offloading is an experimental feature, currently supported for few c and c++ compilers ([list of compilers](https://www.openmp.org/resources/openmp-compilers-tools/)). Device offload was introduced in OpenMP 4.5, but the loop construct only in the version 5.0.
 
-OpenMP 5 with teams and SIMD directives are not supported by MinGW or MSVC compilers on Windows.
+OpenMP 4.5 with teams, target and OpenMP with loop directive are not supported by MinGW or MSVC compilers on Windows. These compilers fully support OpenMP 2.5 and some clauses of version 3.1, as SMID from version 4.0. 
 
 Before to compile sobel codes, you need to install some software:
 - Install OpenCV (we used vc15) on the [official web site](https://opencv.org/releases/) for Windows. We use it to load and write images.
@@ -10,9 +10,10 @@ Before to compile sobel codes, you need to install some software:
     - Update {path_to} with your OpenCV installation path and cahnge vc15 if you have installed an other version.
     - Note: undo this command with ``REG delete HKCU\Environment /F /V OpenCV_DIR``
 - List of created Projets and requirements:
-    - Seq-sobel and CPU-Sobel projets were setup with Visual Studio 2022 and [Intel C++ Compiler 2023](https://www.intel.com/content/www/us/en/developer/articles/tool/oneapi-standalone-components.html#dpcpp-cpp) for Teams support. Also support GPU-Offloading for Intel GPUs.
-    - GPU-Sobel project run on WSL Ubuntu 22.04 LTS with g++ v11.3.0, use terminal and provided makefile. You need to enable on Windows WSL. Please read [installation.md](GPU-Sobel/installation.md) for more details.
-    - Cuda-Sobel project needs [Cuda toolkit 11.8](https://developer.nvidia.com/cuda-11-8-0-download-archive) and Visual Studio Build tools. Please read [installation.md](Cuda-Sobel/installation.md)
+    - Seq-sobel and CPU-Sobel projets were setup with Visual Studio 2022 and [Intel C++ Compiler 2023](https://www.intel.com/content/www/us/en/developer/articles/tool/oneapi-standalone-components.html#dpcpp-cpp) for Teams support. Also support GPU-Offloading for Intel GPUs. Inter compiler 2023 supports OpenMP 5.0 and 5.1.
+    - GPU-Sobel project was tested on WSL Ubuntu 22.04 LTS with g++ v11.3.0, on terminal and with provided makefile. It support offload for Nvidia and AMD-GPUs. You need first to enable on Windows WSL. Please read [installation.md](GPU-Sobel/installation.md) for more details. GNU 11 fully support OpenMP 4.5 and many features of OpenMP 5.0 
+    Note: If you have an other OS as Windows or not a Nvdia-GPU, you may have to find an other compiler which best fit your envirement and probabely doesn't require a virtual machine.
+    - Cuda-Sobel project needs [Cuda toolkit 11.8](https://developer.nvidia.com/cuda-11-8-0-download-archive) and Visual Studio Build tools. Please read [installation.md](Cuda-Sobel/installation.md) for a setup on Windows with Cuda and OpenCV.
 - Images are stored in the ``images`` directory.
 
 ⚠️ Important:
