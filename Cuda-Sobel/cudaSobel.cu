@@ -80,7 +80,7 @@ int main(void) {
         return -1;
     }
 
-    // Prepare and convete images data
+    // Prepare and convert images data
 	const int PIXELS = image.rows * image.cols;
 
 	auto *imageArray = (uchar *)malloc(PIXELS * sizeof(char));

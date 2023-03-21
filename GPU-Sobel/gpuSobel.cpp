@@ -142,7 +142,7 @@ int main(int argc, char** argv)
 		return -1;
 	}
 
-	// Prepare and convete images data
+	// Prepare and convert images data
 	const int PIXELS = image.rows * image.cols;
 	const int IMAGE_SIZE = PIXELS * sizeof(char);
 
