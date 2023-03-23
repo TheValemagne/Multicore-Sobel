@@ -13,10 +13,10 @@ using namespace cv;
 using namespace std;
 
 /**
- * @brief Horizontal Sobel as parallel implementation on GPU. Version for Cuda with 2-Dim grid and 2-Dim blocks.
+ * @brief Horizontal Sobel as parallel implementation on GPU with Cuda. Use a 2-Dim grid and 2-Dim blocks.
  *
- * @param image black-white image
- * @param result result image after horizental filtering
+ * @param image black-white images pixel array
+ * @param result result pixel array after horizental sobel filtering
  * @param height height of image
  * @param width width of image
  */
@@ -36,8 +36,8 @@ __global__ void horizontalSobel(const uchar *image, uchar *result, const int hei
 /**
  * @brief Convert OpenCV matrix to uchar array.
  *
- * @param matrix data of image
- * @param array result images pixels in an array
+ * @param matrix images pixel matrix
+ * @param array result pixels array
  * @param rows height of image
  * @param cols width of image
  */
@@ -52,8 +52,8 @@ void matrixToArray(const Mat matrix, uchar *array, const int rows, const int col
 /**
  * @brief Update OpenCV matrix with data of uchar array.
  *
- * @param array images pixels in an array
- * @param matrix data of image to update
+ * @param array images pixels array
+ * @param matrix result pixel matrix
  * @param rows height of image
  * @param cols width of image
  */

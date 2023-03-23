@@ -52,7 +52,7 @@ void horizontalSobel2(Mat image, const int height, const int width) {
 }
 
 /**
- * @brief Horizontal Sobel as parallel implementation on CPU. Version with OpenMP-teams and parralel region.
+ * @brief Horizontal Sobel as parallel implementation on CPU. Version with OpenMP-teams and parallel region.
  *
  * @param image black-white image
  * @param height height of image

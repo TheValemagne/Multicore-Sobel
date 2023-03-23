@@ -10,10 +10,10 @@ using namespace cv;
 using namespace std;
 
 /**
- * @brief Horizontal Sobel as parallel implementation on GPU. Version 1 with OpenMP-teams.
+ * @brief Horizontal Sobel as parallel implementation on GPU. Version 1 with OpenMP-teams loop.
  *
- * @param image black-white image
- * @param result result image after horizental filtering
+ * @param image black-white images pixel array
+ * @param result result pixel array after horizental sobel filtering
  * @param height height of image
  * @param width width of image
  */
@@ -31,10 +31,10 @@ void horizontalSobel(const uchar *image, uchar *result, const int height, const 
 }
 
 /**
- * @brief Horizontal Sobel as parallel implementation on GPU. Version 1 with OpenMP-teams and parallel regions.
+ * @brief Horizontal Sobel as parallel implementation on GPU. Version 2 with OpenMP-teams loop and parallel regions.
  * 
- * @param image black-white image
- * @param result result image after horizental filtering
+ * @param image black-white images pixel array
+ * @param result result pixel array after horizental sobel filtering
  * @param height height of image
  * @param width width of image
  */
@@ -53,10 +53,10 @@ void horizontalSobel2(const uchar *image, uchar *result, const int height, const
 }
 
 /**
- * @brief Horizontal Sobel as parallel implementation on GPU. Version 3 with OpenMP-teams and collapse.
+ * @brief Horizontal Sobel as parallel implementation on GPU. Version 3 with OpenMP-teams loop and collapse.
  *
- * @param image black-white image
- * @param result result image after horizental filtering
+ * @param image black-white images pixel array
+ * @param result result pixel array after horizental sobel filtering
  * @param height height of image
  * @param width width of image
  */
@@ -74,10 +74,10 @@ void horizontalSobel3(const uchar *image, uchar *result, const int height, const
 }
 
 /**
- * @brief Horizontal Sobel as parallel implementation on GPU. Version 4 with OpenMP-teams and for of 2 levels.
+ * @brief Horizontal Sobel as parallel implementation on GPU. Version 4 with OpenMP-teams parallel for and  collapse.
  *
- * @param image black-white image
- * @param result result image after horizental filtering
+ * @param image black-white images pixel array
+ * @param result result pixel array after horizental sobel filtering
  * @param height height of image
  * @param width width of image
  */
@@ -97,8 +97,8 @@ void horizontalSobel4(const uchar *image, uchar *result, const int height, const
 /**
  * @brief Convert OpenCV matrix to uchar array.
  *
- * @param matrix data of image
- * @param array result images pixels in an array
+ * @param matrix images pixel matrix
+ * @param array result pixels array
  * @param rows height of image
  * @param cols width of image
  */
@@ -113,8 +113,8 @@ void matrixToArray(const Mat matrix, uchar *array, const int rows, const int col
 /**
  * @brief Update OpenCV matrix with data of uchar array.
  *
- * @param array images pixels in an array
- * @param matrix data of image to update
+ * @param array images pixels array
+ * @param matrix result pixel matrix
  * @param rows height of image
  * @param cols width of image
  */
