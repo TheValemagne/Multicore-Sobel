@@ -41,7 +41,7 @@ void horizontalSobel(const uchar *image, uchar *result, const int height, const 
 void horizontalSobel2(const uchar *image, uchar *result, const int height, const int width) {
 	#pragma omp target teams loop shared(image)
 	for (int row = 0; row < height - 2; row++) {
-		#pragma omp parallel for
+		#pragma omp parallel for shared(image)
 		for (int col = 0; col < width - 2; col++) {
 			uchar xDerivate =   image[row * width + col]           - image[row * width + col + 2]
 				              + 2 * image[(row + 1) * width + col] - 2 * image[(row + 1) * width + col + 2]
@@ -61,7 +61,7 @@ void horizontalSobel2(const uchar *image, uchar *result, const int height, const
  * @param width width of image
  */
 void horizontalSobel3(const uchar *image, uchar *result, const int height, const int width) {
-	#pragma omp target teams loop shared(image) collapse(2)
+	#pragma omp target teams loop collapse(2) shared(image)
 	for (int row = 0; row < height - 2; row++) {
 		for (int col = 0; col < width - 2; col++) {
 			uchar xDerivate =   image[row * width + col]           - image[row * width + col + 2]
@@ -82,7 +82,7 @@ void horizontalSobel3(const uchar *image, uchar *result, const int height, const
  * @param width width of image
  */
 void horizontalSobel4(const uchar *image, uchar *result, const int height, const int width) {
-	#pragma omp target teams distribute parallel for collapse(2)
+	#pragma omp target teams distribute parallel for collapse(2) shared(image)
 	for (int row = 0; row < height - 2; row++) {
 		for (int col = 0; col < width - 2; col++) {
 			uchar xDerivate =   image[row * width + col]           - image[row * width + col + 2]
