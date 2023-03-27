@@ -66,5 +66,5 @@ g++ -o gpuSobel gpuSobel.cpp -I/usr/local/include/opencv4/ -lopencv_objdetect -l
 ```
 
 Note:
-- flag -foffload=nvptx-none is optional. The code will automatically run on NVdia GPU, whenn target regions are entered.
+- flag -foffload=nvptx-none is optional. The code will automatically run on NVdia GPU, wenn target regions are entered.
 - Theses offload options are specific to GNU
